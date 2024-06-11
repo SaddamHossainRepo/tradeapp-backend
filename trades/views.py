@@ -1,4 +1,4 @@
-# trades/views.py
+
 
 import json
 from django.http import JsonResponse
@@ -10,8 +10,7 @@ import os
 
 class TradeListView(View):
     def get(self, request):
-        # file_path = os.path.join(settings.BASE_DIR, '')
-        file_path = 'C:/projects/django/assignment-backend/assignmentBackend/initial_data.json'
+        file_path = os.path.join(settings.BASE_DIR, 'initial_data.json')
         with open(file_path, 'r') as file:
             data = json.load(file)
         
