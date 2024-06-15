@@ -3,6 +3,8 @@
 import json
 from django.http import JsonResponse
 from django.views import View
+
+from . serializers import TradeSerializer
 from .models import Trade
 from django.core import serializers
 from django.conf import settings
@@ -32,3 +34,27 @@ class TradeListView(View):
             'offset': offset,
         }
         return JsonResponse(trade_list, safe=False)
+    
+    def add_trade(self, request):
+        serializer = TradeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete_trade(request, id):
+        try:
+            trade = Trade.objects.get(pk=id)
+            trade.delete()
+            return JsonResponse({'status': 'success', 'message': 'Trade deleted successfully.'})
+        except Trade.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Trade not found.'}, status=404)
+
+class DeleteView(View):
+    def delete_trade(request, id):
+        try:
+            trade = Trade.objects.get(pk=id)
+            trade.delete()
+            return JsonResponse({'status': 'success', 'message': 'Trade deleted successfully.'})
+        except Trade.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Trade not found.'}, status=404)
