@@ -43,4 +43,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f'Seeding done'))
     
     def transformToDecimal(self, value):
-        return decimal.Decimal(value.replace(',', ''))
+        if value:
+            return decimal.Decimal(value.replace(',', ''))
+        else:
+            return 0
