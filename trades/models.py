@@ -1,6 +1,7 @@
 from django.db import models
 
 class Trade(models.Model):
+    id = models.AutoField(primary_key=True)
     date = models.DateField()
     trade_code = models.CharField(max_length=20)
     high = models.DecimalField(max_digits=5, decimal_places=2)
