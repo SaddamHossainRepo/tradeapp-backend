@@ -12,8 +12,8 @@ class TradeListView(View):
     def get(self, request):
         print("Request Object:", request)
         params = request.GET
-        page = params.get("page", 1)
-        limit = params.get("limit", 10)
+        page = int(params.get("page", 1))
+        limit = int(params.get("limit", 10))
         file_path = os.path.join(settings.BASE_DIR, 'initial_data.json')
         with open(file_path, 'r') as file:
             data = json.load(file)
@@ -34,6 +34,7 @@ class TradeListView(View):
 
         # Convert model instances to dictionary (if needed)
         trades_data = [{
+            "id": index+ 1,
             "date": trade.date,
             "trade_code": trade.trade_code,
             "high": str(trade.high),
@@ -41,12 +42,12 @@ class TradeListView(View):
             "open": str(trade.open),
             "close": str(trade.close),
             "volume": trade.volume
-        } for trade in trades]
+        } for index, trade in enumerate(trades)]
         
-        # start = int(page - 1) * limit
-        # end = page*limit
-        # print("start", start)
-        # print("end", end)
-        # sliced_trades_data = trades_data[start:end]
+        start = int(page - 1) * limit
+        end = page*limit
+        print("start", start)
+        print("end", end)
+        sliced_trades_data = trades_data[start:end]
 
-        return JsonResponse(trades_data, safe=False)
+        return JsonResponse(sliced_trades_data, safe=False)
